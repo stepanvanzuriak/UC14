@@ -1,0 +1,130 @@
+Create README file based on this app description: 
+
+"
+·	React JS applications can launch, and no errors in the console;
+·	React JS applications can handle a call to the landing page and return HTML content;
+·	The source code should be without commented or unused functions and methods;
+·	React JS application should handle locale;
+·	React JS application should have logic to switch locales;
+·	3 locales should be defined and work without issues (UA, EN, FR);
+·	Logic to format numbers is implemented for all mentioned locales and format numbers according to local standards;
+·	Logic for Date/Time formatting is implemented for all locales and works as expected;
+·	Logic to display currency is implemented for all the mentioned locales;
+·	Logic to handle missed translations is built and works as expected;
+
+Tool / Methodology
+React (v. 18.2.0)
+react-i18next (v. 13.0.0.)
+JavaScript(ES6+)
+Node JS (v. 18.x)
+Npm (v. 9.x)
+
+"
+
+# MyReactApp
+
+MyReactApp is a React JS application designed to handle multiple locales (UA, EN, FR) and format numbers, date/time, and currency according to local standards. It ensures there are no console errors on launch, returns HTML content for the landing page, and handles missing translations gracefully.
+
+## Features
+
+- Launch without any console errors.
+- Handle a call to the landing page and return HTML content.
+- Handle and switch between multiple locales (UA, EN, FR).
+- Format numbers, date/time, and currency according to the selected locale.
+- Handle missing translations.
+
+## Requirements
+
+- Node.js (v. 18.x)
+- npm (v. 9.x)
+
+## Technologies Used
+
+- React (v. 18.2.0)
+- react-i18next (v. 13.0.0)
+- JavaScript (ES6+)
+
+## Installation
+
+1. Make sure you have Node.js and npm installed on your machine.
+2. Clone the repository:
+```
+git clone https://github.com/yourusername/MyReactApp.git
+```
+3. Navigate to the project folder:
+```
+cd MyReactApp
+```
+4. Install the required npm packages:
+```
+npm install
+```
+5. Start the application:
+```
+npm start
+```
+The application should now be running on `http://localhost:3000/`.
+
+## Usage
+
+Upon launching the application, the landing page will be displayed with content in the default locale. Users can switch between the supported locales (UA, EN, FR) using the locale switcher in the application. The application will then update the displayed content, numbers, date/time, and currency formats according to the selected locale.
+
+## Notes
+
+- Ensure the source code is free from commented or unused functions and methods before deployment.
+- Test the application thoroughly to ensure all mentioned locales work without issues and handle missing translations as expected.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE.md file for details.
+
+> o	Update Readme.md with 
+	Application description: 2 paragraphs, 4-10 Sentences.
+	Information on how to run developed application locally.
+	At least 2 example urls how to change locale.
+
+Replace name MyReactApp with UC14
+
+# UC14
+
+UC14 is a versatile React JS application developed to accommodate users from diverse regions by providing content in multiple languages - Ukrainian (UA), English (EN), and French (FR). It is meticulously designed to format numbers, date/time, and currency as per the local standards of the selected locale. The application ensures a smooth user experience by launching without any console errors, rendering HTML content on the landing page, switching between locales seamlessly, and handling missing translations gracefully.
+
+The application is developed using React (v. 18.2.0) and react-i18next (v. 13.0.0) to manage the internationalization of the application. It uses the latest features of JavaScript (ES6+) and is built on the Node.js (v. 18.x) runtime environment, utilizing the npm (v. 9.x) package manager for dependency management. UC14 is engineered to be user-friendly and robust, ensuring a seamless experience for users from different locales.
+
+## Installation and Running Locally
+
+1. Make sure you have Node.js and npm installed on your machine.
+2. Clone the repository:
+```
+git clone https://github.com/yourusername/UC14.git
+```
+3. Navigate to the project folder:
+```
+cd UC14
+```
+4. Install the required npm packages:
+```
+npm install
+```
+5. Start the application:
+```
+npm start
+```
+The application should now be running on `http://localhost:3000/`.
+
+## Example URLs for Changing Locale
+
+Once the application is running locally, you can change the locale by visiting the following URLs:
+
+- For English (EN): `http://localhost:3000/en`
+- For Ukrainian (UA): `http://localhost:3000/ua`
+- For French (FR): `http://localhost:3000/fr`
+
+## Notes
+
+- Ensure the source code is free from commented or unused functions and methods before deployment.
+- Test the application thoroughly to ensure all mentioned locales work without issues and handle missing translations as expected.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE.md file for details.

@@ -1,6 +1,9 @@
-### UC14
+# UC14
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+UC14 is a versatile React JS application developed to accommodate users from diverse regions by providing content in multiple languages - Ukrainian (UA), English (EN), and French (FR). It is meticulously designed to format numbers, date/time, and currency as per the local standards of the selected locale. The application ensures a smooth user experience by launching without any console errors, rendering HTML content on the landing page, switching between locales seamlessly, and handling missing translations gracefully.
+
+The application is developed using React and react-i18next to manage the internationalization of the application. It uses the latest features of JavaScript (ES6+) and is built on the Node.js runtime environment, utilizing the npm package manager for dependency management. UC14 is engineered to be user-friendly and robust, ensuring a seamless experience for users from different locales.
+
 
 ## Available Scripts
 
