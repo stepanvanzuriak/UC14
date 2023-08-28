@@ -1,0 +1,1449 @@
+> How to configure react i18next?
+
+
+React-i18next is a powerful internationalization (i18n) framework for React applications. It provides an easy way to manage translations and is compatible with other i18n libraries such as i18next.
+
+Here are the steps to configure react-i18next:
+
+1. **Install Packages**: Start by installing `i18next` and `react-i18next` packages.
+   
+   ```
+   npm install i18next react-i18next
+   ```
+
+2. **Create translation files**: Create a folder for your translations, and within that folder, create a file for each language you want to support. For example:
+
+   ```
+   src/
+     translations/
+       en.json
+       fr.json
+   ```
+
+   In `en.json`, you might have:
+
+   ```json
+   {
+     "welcome": "Welcome!",
+     "message": "Hello, World!"
+   }
+   ```
+
+   And in `fr.json`, you might have:
+
+   ```json
+   {
+     "welcome": "Bienvenue!",
+     "message": "Bonjour le monde!"
+   }
+   ```
+
+3. **Initialize i18next**: Create a file where you will initialize `i18next`. You can name it `i18n.js`.
+
+   ```javascript
+   import i18n from 'i18next';
+   import { initReactI18next } from 'react-i18next';
+   import en from './translations/en.json';
+   import fr from './translations/fr.json';
+
+   i18n.use(initReactI18next).init({
+     resources: {
+       en: {
+         translation: en,
+       },
+       fr: {
+         translation: fr,
+       },
+     },
+     lng: 'en', // default language
+     fallbackLng: 'en', // use en if the language is not available
+     interpolation: {
+       escapeValue: false, // react is already safe from xss
+     },
+   });
+
+   export default i18n;
+   ```
+
+4. **Import and use i18n**: Import the `i18n.js` file in your main application file, usually `index.js` or `App.js`.
+
+   ```javascript
+   import './i18n';
+   ```
+
+5. **Use Translation Hook**: In your components, you can now use the `useTranslation` hook to access your translations.
+
+   ```javascript
+   import React from 'react';
+   import { useTranslation } from 'react-i18next';
+
+   function MyComponent() {
+     const { t } = useTranslation();
+
+     return (
+       <div>
+         <h1>{t('welcome')}</h1>
+         <p>{t('message')}</p>
+       </div>
+     );
+   }
+
+   export default MyComponent;
+   ```
+
+6. **Changing Languages**: You can change the language by calling `i18n.changeLanguage('fr')`.
+
+That's it! You have successfully configured react-i18next in your application. This is a basic configuration and the library has a lot of other features like language detection, lazy loading, etc. Check the official documentation for more advanced usage: [react-i18next documentation](https://react.i18next.com/).
+
+
+> Create functionality to handle locale by switching select input with different languages
+
+
+Sure! Below is an example of a `LanguageSelector` component that you can use to switch between different languages using a select input.
+
+1. **Create the LanguageSelector Component**: This component will contain a select input that will be used to change the language.
+
+```javascript
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+
+const LanguageSelector = () => {
+  const { i18n } = useTranslation();
+
+  const changeLanguage = (event) => {
+    i18n.changeLanguage(event.target.value);
+  };
+
+  return (
+    <select onChange={changeLanguage} defaultValue={i18n.language}>
+      <option value="en">English</option>
+      <option value="fr">French</option>
+      {/* Add more languages here */}
+    </select>
+  );
+};
+
+export default LanguageSelector;
+```
+
+In this component, we use the `useTranslation` hook to get the `i18n` instance. Then, we create a `changeLanguage` function that will be called whenever the selected language is changed. This function changes the language using `i18n.changeLanguage`.
+
+2. **Use the LanguageSelector Component**: Use the `LanguageSelector` component in your main component or wherever you want to place the language selector.
+
+```javascript
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import LanguageSelector from './LanguageSelector';
+
+function App() {
+  const { t } = useTranslation();
+
+  return (
+    <div>
+      <LanguageSelector />
+      <h1>{t('welcome')}</h1>
+      <p>{t('message')}</p>
+    </div>
+  );
+}
+
+export default App;
+```
+
+In this `App` component, we import and use the `LanguageSelector` component. Also, we use the `useTranslation` hook to translate the text.
+
+Now, when you run your application, you will see a select input with the options "English" and "French". When you change the selected option, the language of the application will change accordingly.
+
+> Add 4 different formats for Date and Time for each locale
+
+To handle different date and time formats for each locale, you can use the `toLocaleDateString` and `toLocaleTimeString` methods available in JavaScript.
+
+Here's how you can modify your `App` component to display date and time in different formats for each locale:
+
+```javascript
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import LanguageSelector from './LanguageSelector';
+
+function App() {
+  const { t, i18n } = useTranslation();
+  const currentLanguage = i18n.language;
+
+  const date = new Date();
+
+  const optionsDate = { year: 'numeric', month: 'long', day: 'numeric' };
+  const formattedDate = date.toLocaleDateString(currentLanguage, optionsDate);
+
+  const optionsTime = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+  const formattedTime = date.toLocaleTimeString(currentLanguage, optionsTime);
+
+  return (
+    <div>
+      <LanguageSelector />
+      <h1>{t('welcome')}</h1>
+      <p>{t('message')}</p>
+      <p>{t('current_date')}: {formattedDate}</p>
+      <p>{t('current_time')}: {formattedTime}</p>
+    </div>
+  );
+}
+
+export default App;
+```
+
+In this code, we use the `i18n.language` to get the current language, and then we use `toLocaleDateString` and `toLocaleTimeString` methods to format the date and time according to the current language.
+
+For `toLocaleDateString`, we are specifying the `year`, `month`, and `day` to be displayed. For `toLocaleTimeString`, we are specifying the `hour`, `minute`, and `second` to be displayed.
+
+In your translation files, you can add the `current_date` and `current_time` keys:
+
+`en.json`:
+```json
+{
+  "welcome": "Welcome!",
+  "message": "Hello, World!",
+  "current_date": "Current Date",
+  "current_time": "Current Time"
+}
+```
+
+`fr.json`:
+```json
+{
+  "welcome": "Bienvenue!",
+  "message": "Bonjour le monde!",
+  "current_date": "Date actuelle",
+  "current_time": "Heure actuelle"
+}
+```
+
+Now, the `App` component will display the current date and time formatted according to the selected language.
+
+> Add two more examples of datetime
+
+
+Sure, here are two more examples of date and time formatting for each locale.
+
+In the `App` component, you can add two more examples of formatted date and time:
+
+```javascript
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import LanguageSelector from './LanguageSelector';
+
+function App() {
+  const { t, i18n } = useTranslation();
+  const currentLanguage = i18n.language;
+
+  const date = new Date();
+
+  const optionsDate = { year: 'numeric', month: 'long', day: 'numeric' };
+  const formattedDate = date.toLocaleDateString(currentLanguage, optionsDate);
+
+  const optionsTime = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+  const formattedTime = date.toLocaleTimeString(currentLanguage, optionsTime);
+
+  const optionsDateShort = { year: '2-digit', month: '2-digit', day: '2-digit' };
+  const formattedDateShort = date.toLocaleDateString(currentLanguage, optionsDateShort);
+
+  const optionsTimeShort = { hour: '2-digit', minute: '2-digit' };
+  const formattedTimeShort = date.toLocaleTimeString(currentLanguage, optionsTimeShort);
+
+  return (
+    <div>
+      <LanguageSelector />
+      <h1>{t('welcome')}</h1>
+      <p>{t('message')}</p>
+      <p>{t('current_date')}: {formattedDate}</p>
+      <p>{t('current_time')}: {formattedTime}</p>
+      <p>{t('current_date_short')}: {formattedDateShort}</p>
+      <p>{t('current_time_short')}: {formattedTimeShort}</p>
+    </div>
+  );
+}
+
+export default App;
+```
+
+In this code, we added two more formatted date and time:
+
+- `formattedDateShort`: This is a short version of the date, with 2 digits for year, month, and day.
+- `formattedTimeShort`: This is a short version of the time, with 2 digits for hour and minute.
+
+And in your translation files, you can add the `current_date_short` and `current_time_short` keys:
+
+`en.json`:
+```json
+{
+  "welcome": "Welcome!",
+  "message": "Hello, World!",
+  "current_date": "Current Date",
+  "current_time": "Current Time",
+  "current_date_short": "Current Date (Short)",
+  "current_time_short": "Current Time (Short)"
+}
+```
+
+`fr.json`:
+```json
+{
+  "welcome": "Bienvenue!",
+  "message": "Bonjour le monde!",
+  "current_date": "Date actuelle",
+  "current_time": "Heure actuelle",
+  "current_date_short": "Date actuelle (Courte)",
+  "current_time_short": "Heure actuelle (Courte)"
+}
+```
+
+Now, the `App` component will display two more formatted date and time: a short version of the date and a short version of the time.
+
+> Let's move datetime part to own component
+
+Sure, you can create a separate `DateTime` component for displaying the formatted date and time. 
+
+Here's how you can do it:
+
+1. **Create the DateTime Component**: This component will handle the formatting and display of date and time.
+
+```javascript
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+
+const DateTime = () => {
+  const { t, i18n } = useTranslation();
+  const currentLanguage = i18n.language;
+
+  const date = new Date();
+
+  const optionsDate = { year: 'numeric', month: 'long', day: 'numeric' };
+  const formattedDate = date.toLocaleDateString(currentLanguage, optionsDate);
+
+  const optionsTime = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+  const formattedTime = date.toLocaleTimeString(currentLanguage, optionsTime);
+
+  const optionsDateShort = { year: '2-digit', month: '2-digit', day: '2-digit' };
+  const formattedDateShort = date.toLocaleDateString(currentLanguage, optionsDateShort);
+
+  const optionsTimeShort = { hour: '2-digit', minute: '2-digit' };
+  const formattedTimeShort = date.toLocaleTimeString(currentLanguage, optionsTimeShort);
+
+  return (
+    <div>
+      <p>{t('current_date')}: {formattedDate}</p>
+      <p>{t('current_time')}: {formattedTime}</p>
+      <p>{t('current_date_short')}: {formattedDateShort}</p>
+      <p>{t('current_time_short')}: {formattedTimeShort}</p>
+    </div>
+  );
+};
+
+export default DateTime;
+```
+
+2. **Use the DateTime Component**: Use the `DateTime` component in your `App` component or wherever you want to display the date and time.
+
+```javascript
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import LanguageSelector from './LanguageSelector';
+import DateTime from './DateTime';
+
+function App() {
+  const { t } = useTranslation();
+
+  return (
+    <div>
+      <LanguageSelector />
+      <h1>{t('welcome')}</h1>
+      <p>{t('message')}</p>
+      <DateTime />
+    </div>
+  );
+}
+
+export default App;
+```
+
+Now, the `DateTime` component is responsible for formatting and displaying the date and time, and the `App` component uses both the `LanguageSelector` and `DateTime` components.
+
+> Next component for 4 different Numbers formatted in a range of 1 - 1 000 000 000. Select a different number of digits to highlight different formatting of numbers using different delimiters. 
+Sure, you can create a separate `FormattedNumbers` component for displaying different number formats.
+
+1. **Create the FormattedNumbers Component**: This component will handle the formatting and display of different numbers.
+
+```javascript
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+
+const FormattedNumbers = () => {
+  const { t, i18n } = useTranslation();
+  const currentLanguage = i18n.language;
+
+  const number = 1000000000;
+
+  const formattedNumber1 = new Intl.NumberFormat(currentLanguage).format(number);
+  const formattedNumber2 = new Intl.NumberFormat(currentLanguage, { style: 'currency', currency: 'USD' }).format(number);
+  const formattedNumber3 = new Intl.NumberFormat(currentLanguage, { minimumFractionDigits: 2 }).format(number);
+  const formattedNumber4 = new Intl.NumberFormat(currentLanguage, { maximumFractionDigits: 0 }).format(number);
+
+  return (
+    <div>
+      <p>{t('formatted_number_1')}: {formattedNumber1}</p>
+      <p>{t('formatted_number_2')}: {formattedNumber2}</p>
+      <p>{t('formatted_number_3')}: {formattedNumber3}</p>
+      <p>{t('formatted_number_4')}: {formattedNumber4}</p>
+    </div>
+  );
+};
+
+export default FormattedNumbers;
+```
+
+In this component, we use the `Intl.NumberFormat` object to format the number in different ways:
+
+- `formattedNumber1`: This is the basic formatted number.
+- `formattedNumber2`: This is the number formatted as currency in USD.
+- `formattedNumber3`: This is the number formatted with a minimum of 2 decimal places.
+- `formattedNumber4`: This is the number formatted with no decimal places.
+
+2. **Use the FormattedNumbers Component**: Use the `FormattedNumbers` component in your `App` component or wherever you want to display the formatted numbers.
+
+```javascript
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import LanguageSelector from './LanguageSelector';
+import DateTime from './DateTime';
+import FormattedNumbers from './FormattedNumbers';
+
+function App() {
+  const { t } = useTranslation();
+
+  return (
+    <div>
+      <LanguageSelector />
+      <h1>{t('welcome')}</h1>
+      <p>{t('message')}</p>
+      <DateTime />
+      <FormattedNumbers />
+    </div>
+  );
+}
+
+export default App;
+```
+
+And in your translation files, you can add the `formatted_number_1`, `formatted_number_2`, `formatted_number_3`, and `formatted_number_4` keys:
+
+`en.json`:
+```json
+{
+  "welcome": "Welcome!",
+  "message": "Hello, World!",
+  "current_date": "Current Date",
+  "current_time": "Current Time",
+  "current_date_short": "Current Date (Short)",
+  "current_time_short": "Current Time (Short)",
+  "formatted_number_1": "Formatted Number 1",
+  "formatted_number_2": "Formatted Number 2 (Currency)",
+  "formatted_number_3": "Formatted Number 3 (Minimum 2 Decimals)",
+  "formatted_number_4": "Formatted Number 4 (No Decimals)"
+}
+```
+
+`fr.json`:
+```json
+{
+  "welcome": "Bienvenue!",
+  "message": "Bonjour le monde!",
+  "current_date": "Date actuelle",
+  "current_time": "Heure actuelle",
+  "current_date_short": "Date actuelle (Courte)",
+  "current_time_short": "Heure actuelle (Courte)",
+  "formatted_number_1": "Nombre formaté 1",
+  "formatted_number_2": "Nombre formaté 2 (Monnaie)",
+  "formatted_number_3": "Nombre formaté 3 (Minimum 2 Décimales)",
+  "formatted_number_4": "Nombre formaté 4 (Pas de Décimales)"
+}
+```
+
+Now, the `FormattedNumbers` component is responsible for formatting and displaying different number formats, and the `App` component uses the `LanguageSelector`, `DateTime`, and `FormattedNumbers` components.
+
+> Now own component for ·	- 3 different units of measurement. Inches vs centimeters, pounds vs kilograms, liters vs oz 
+
+Sure, you can create a separate `UnitsOfMeasurement` component for displaying different units of measurement.
+
+1. **Create the UnitsOfMeasurement Component**: This component will handle the conversion and display of different units of measurement.
+
+```javascript
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+
+const UnitsOfMeasurement = () => {
+  const { t, i18n } = useTranslation();
+  const currentLanguage = i18n.language;
+
+  const inches = 10;
+  const pounds = 20;
+  const liters = 30;
+
+  const centimeters = inches * 2.54;
+  const kilograms = pounds * 0.453592;
+  const ounces = liters * 33.814;
+
+  return (
+    <div>
+      <p>{t('inches')}: {inches} {t('inches_symbol')} = {centimeters.toFixed(2)} {t('centimeters_symbol')}</p>
+      <p>{t('pounds')}: {pounds} {t('pounds_symbol')} = {kilograms.toFixed(2)} {t('kilograms_symbol')}</p>
+      <p>{t('liters')}: {liters} {t('liters_symbol')} = {ounces.toFixed(2)} {t('ounces_symbol')}</p>
+    </div>
+  );
+};
+
+export default UnitsOfMeasurement;
+```
+
+In this component, we convert inches to centimeters, pounds to kilograms, and liters to ounces, and then display the converted values.
+
+2. **Use the UnitsOfMeasurement Component**: Use the `UnitsOfMeasurement` component in your `App` component or wherever you want to display the converted units of measurement.
+
+```javascript
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import LanguageSelector from './LanguageSelector';
+import DateTime from './DateTime';
+import FormattedNumbers from './FormattedNumbers';
+import UnitsOfMeasurement from './UnitsOfMeasurement';
+
+function App() {
+  const { t } = useTranslation();
+
+  return (
+    <div>
+      <LanguageSelector />
+      <h1>{t('welcome')}</h1>
+      <p>{t('message')}</p>
+      <DateTime />
+      <FormattedNumbers />
+      <UnitsOfMeasurement />
+    </div>
+  );
+}
+
+export default App;
+```
+
+And in your translation files, you can add the `inches`, `inches_symbol`, `centimeters_symbol`, `pounds`, `pounds_symbol`, `kilograms_symbol`, `liters`, `liters_symbol`, and `ounces_symbol` keys:
+
+`en.json`:
+```json
+{
+  "welcome": "Welcome!",
+  "message": "Hello, World!",
+  "current_date": "Current Date",
+  "current_time": "Current Time",
+  "current_date_short": "Current Date (Short)",
+  "current_time_short": "Current Time (Short)",
+  "formatted_number_1": "Formatted Number 1",
+  "formatted_number_2": "Formatted Number 2 (Currency)",
+  "formatted_number_3": "Formatted Number 3 (Minimum 2 Decimals)",
+  "formatted_number_4": "Formatted Number 4 (No Decimals)",
+  "inches": "Inches",
+  "inches_symbol": "in",
+  "centimeters_symbol": "cm",
+  "pounds": "Pounds",
+  "pounds_symbol": "lb",
+  "kilograms_symbol": "kg",
+  "liters": "Liters",
+  "liters_symbol": "L",
+  "ounces_symbol": "oz"
+}
+```
+
+`fr.json`:
+```json
+{
+  "welcome": "Bienvenue!",
+  "message": "Bonjour le monde!",
+  "current_date": "Date actuelle",
+  "current_time": "Heure actuelle",
+  "current_date_short": "Date actuelle (Courte)",
+  "current_time_short": "Heure actuelle (Courte)",
+  "formatted_number_1": "Nombre formaté 1",
+  "formatted_number_2": "Nombre formaté 2 (Monnaie)",
+  "formatted_number_3": "Nombre formaté 3 (Minimum 2 Décimales)",
+  "formatted_number_4": "Nombre formaté 4 (Pas de Décimales)",
+  "inches": "Pouces",
+  "inches_symbol": "po",
+  "centimeters_symbol": "cm",
+  "pounds": "Livres",
+  "pounds_symbol": "lb",
+  "kilograms_symbol": "kg",
+  "liters": "Litres",
+  "liters_symbol": "L",
+  "ounces_symbol": "oz"
+}
+```
+
+Now, the `UnitsOfMeasurement` component is responsible for converting and displaying different units of measurement, and the `App` component uses the `LanguageSelector`, `DateTime`, `FormattedNumbers`, and `UnitsOfMeasurement` components.
+
+> Let's have one more language, German
+
+To add German language support, you need to do the following:
+
+1. **Add German Translation File**: Create a new file called `de.json` in the `public/locales/de` folder.
+
+`de.json`:
+```json
+{
+  "welcome": "Willkommen!",
+  "message": "Hallo Welt!",
+  "current_date": "Aktuelles Datum",
+  "current_time": "Aktuelle Uhrzeit",
+  "current_date_short": "Aktuelles Datum (Kurz)",
+  "current_time_short": "Aktuelle Uhrzeit (Kurz)",
+  "formatted_number_1": "Formatierte Nummer 1",
+  "formatted_number_2": "Formatierte Nummer 2 (Währung)",
+  "formatted_number_3": "Formatierte Nummer 3 (Mindestens 2 Dezimalstellen)",
+  "formatted_number_4": "Formatierte Nummer 4 (Keine Dezimalstellen)",
+  "inches": "Zoll",
+  "inches_symbol": "in",
+  "centimeters_symbol": "cm",
+  "pounds": "Pfund",
+  "pounds_symbol": "lb",
+  "kilograms_symbol": "kg",
+  "liters": "Liter",
+  "liters_symbol": "L",
+  "ounces_symbol": "oz"
+}
+```
+
+2. **Update the LanguageSelector Component**: Update the `LanguageSelector` component to include an option for selecting the German language.
+
+```javascript
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+
+const LanguageSelector = () => {
+  const { i18n } = useTranslation();
+
+  const changeLanguage = (event) => {
+    i18n.changeLanguage(event.target.value);
+  };
+
+  return (
+    <div onChange={changeLanguage}>
+      <input type="radio" value="en" name="language" defaultChecked /> English
+      <input type="radio" value="fr" name="language" /> Français
+      <input type="radio" value="de" name="language" /> Deutsch
+    </div>
+  );
+};
+
+export default LanguageSelector;
+```
+
+Now, the `LanguageSelector` component includes an option for selecting the German language, and the `de.json` file includes the translations for the German language. When you select the German language in the `LanguageSelector` component, the application will display the German translations.
+
+> Create basic global css for this app
+
+Sure, here is a basic global CSS file for your app.
+
+Create a file called `global.css` in the `src` folder:
+
+`src/global.css`:
+```css
+/* Global styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  color: #333;
+}
+
+p {
+  color: #555;
+}
+
+input[type="radio"] {
+  margin: 0 10px;
+}
+
+/* Container for the entire app */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
+}
+
+/* Style for language selector */
+.language-selector {
+  margin-bottom: 20px;
+}
+```
+
+In the `global.css` file, we define some basic global styles for the `body`, `h1`, `p`, and `input` elements. We also define some styles for the `.app-container` and `.language-selector` classes.
+
+Then, you need to import the `global.css` file in your `App.js` file:
+
+`src/App.js`:
+```javascript
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import './global.css';
+import LanguageSelector from './LanguageSelector';
+import DateTime from './DateTime';
+import FormattedNumbers from './FormattedNumbers';
+import UnitsOfMeasurement from './UnitsOfMeasurement';
+
+function App() {
+  const { t } = useTranslation();
+
+  return (
+    <div className="app-container">
+      <div className="language-selector">
+        <LanguageSelector />
+      </div>
+      <h1>{t('welcome')}</h1>
+      <p>{t('message')}</p>
+      <DateTime />
+      <FormattedNumbers />
+      <UnitsOfMeasurement />
+    </div>
+  );
+}
+
+export default App;
+```
+
+Now, the `App` component uses the global styles defined in the `global.css` file, and the `app-container` and `language-selector` classes are applied to the `div` elements in the `App` component.
+
+> Create functionality to handle missing translation or formatting
+
+In `react-i18next`, when a translation is missing, it will show the key of the missing translation by default. However, you can customize this behavior by using the `missingKeyHandler` option in the i18next configuration.
+
+1. **Update the i18next Configuration**: In your i18next configuration file, add the `missingKeyHandler` option:
+
+`src/i18n.js`:
+```javascript
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import Backend from 'i18next-http-backend';
+import LanguageDetector from 'i18next-browser-languagedetector';
+import en from './locales/en.json';
+import fr from './locales/fr.json';
+import de from './locales/de.json';
+
+i18n
+  .use(Backend)
+  .use(LanguageDetector)
+  .use(initReactI18next)
+  .init({
+    resources: {
+      en: {
+        translation: en,
+      },
+      fr: {
+        translation: fr,
+      },
+      de: {
+        translation: de,
+      },
+    },
+    fallbackLng: 'en',
+    debug: true,
+    interpolation: {
+      escapeValue: false,
+    },
+    react: {
+      wait: true,
+    },
+    missingKeyHandler: (lngs, namespace, key, fallbackValue) => {
+      return `Missing translation: ${key}`;
+    },
+  });
+
+export default i18n;
+```
+
+In the `missingKeyHandler` option, you can define a function that will be called when a translation is missing. The function receives four parameters: `lngs`, `namespace`, `key`, and `fallbackValue`. You can return a custom message that will be shown when a translation is missing.
+
+2. **Use the missingKeyHandler**: When you use the `t` function from `react-i18next` to translate a key, and the key is missing, the `missingKeyHandler` function will be called, and the custom message will be shown.
+
+For example, if you use `t('missing_key')` in your `App` component, and the `missing_key` key is missing in your translation files, the `missingKeyHandler` function will be called, and the custom message will be shown:
+
+`src/App.js`:
+```javascript
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import './global.css';
+import LanguageSelector from './LanguageSelector';
+import DateTime from './DateTime';
+import FormattedNumbers from './FormattedNumbers';
+import UnitsOfMeasurement from './UnitsOfMeasurement';
+
+function App() {
+  const { t } = useTranslation();
+
+  return (
+    <div className="app-container">
+      <div className="language-selector">
+        <LanguageSelector />
+      </div>
+      <h1>{t('welcome')}</h1>
+      <p>{t('message')}</p>
+      <p>{t('missing_key')}</p>
+      <DateTime />
+      <FormattedNumbers />
+      <UnitsOfMeasurement />
+    </div>
+  );
+}
+
+export default App;
+```
+
+In this example, the `missing_key` key is missing in the translation files, so the `missingKeyHandler` function will be called, and the custom message "Missing translation: missing_key" will be shown in the `App` component.
+
+> Change de to ua locale
+
+To change the `de` locale to `ua`, you will need to make changes in a few places:
+
+1. **Update the `ua.json` file**: Rename the `de.json` file to `ua.json` and update the translations as necessary.
+
+`public/locales/ua/ua.json`:
+```json
+{
+  "welcome": "Ласкаво просимо!",
+  "message": "Привіт, світ!",
+  ...
+}
+```
+
+2. **Update the i18next Configuration**: Update the i18next configuration file to use the `ua` locale instead of `de`.
+
+`src/i18n.js`:
+```javascript
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import Backend from 'i18next-http-backend';
+import LanguageDetector from 'i18next-browser-languagedetector';
+import en from './locales/en.json';
+import fr from './locales/fr.json';
+import ua from './locales/ua.json';
+
+i18n
+  .use(Backend)
+  .use(LanguageDetector)
+  .use(initReactI18next)
+  .init({
+    resources: {
+      en: {
+        translation: en,
+      },
+      fr: {
+        translation: fr,
+      },
+      ua: {
+        translation: ua,
+      },
+    },
+    fallbackLng: 'en',
+    debug: true,
+    interpolation: {
+      escapeValue: false,
+    },
+    react: {
+      wait: true,
+    },
+    missingKeyHandler: (lngs, namespace, key, fallbackValue) => {
+      return `Missing translation: ${key}`;
+    },
+  });
+
+export default i18n;
+```
+
+3. **Update the `LanguageSelector` Component**: Update the `LanguageSelector` component to include an option for selecting the Ukrainian language.
+
+`src/LanguageSelector.js`:
+```javascript
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+
+const LanguageSelector = () => {
+  const { i18n } = useTranslation();
+
+  const changeLanguage = (event) => {
+    i18n.changeLanguage(event.target.value);
+  };
+
+  return (
+    <div onChange={changeLanguage}>
+      <input type="radio" value="en" name="language" defaultChecked /> English
+      <input type="radio" value="fr" name="language" /> Français
+      <input type="radio" value="ua" name="language" /> Українська
+    </div>
+  );
+};
+
+export default LanguageSelector;
+```
+
+Now, the `ua` locale is used instead of the `de` locale. When you select the Ukrainian language in the `LanguageSelector` component, the application will display the Ukrainian translations.
+
+> Show full ua.json
+
+Here is an example of a `ua.json` file with translations for the keys you might be using in your app, including date and time, formatted numbers, and units of measurement.
+
+`public/locales/ua/ua.json`:
+```json
+{
+  "welcome": "Ласкаво просимо!",
+  "message": "Привіт, світ!",
+  "current_date": "Поточна дата",
+  "current_time": "Поточний час",
+  "current_date_short": "Поточна дата (коротка)",
+  "current_time_short": "Поточний час (короткий)",
+  "formatted_number_1": "Форматоване число 1",
+  "formatted_number_2": "Форматоване число 2 (валюта)",
+  "formatted_number_3": "Форматоване число 3 (мінімум 2 десяткові знаки)",
+  "formatted_number_4": "Форматоване число 4 (без десяткових знаків)",
+  "inches": "Дюйми",
+  "inches_symbol": "in",
+  "centimeters_symbol": "см",
+  "pounds": "Фунти",
+  "pounds_symbol": "lb",
+  "kilograms_symbol": "кг",
+  "liters": "Літри",
+  "liters_symbol": "л",
+  "ounces_symbol": "унції"
+}
+```
+
+Make sure to adapt the translations according to your needs, and to include any additional keys that you are using in your application. This example includes basic translations for common keys, but your application might require more specific translations.
+
+> Create unit tests for DateTime
+
+To create unit tests for the `DateTime` component, you would typically use testing libraries such as `@testing-library/react` and `jest`.
+
+1. **Install Testing Libraries**: If you haven't already installed the testing libraries, install them by running:
+
+```
+npm install --save-dev @testing-library/react @testing-library/jest-dom jest
+```
+
+2. **Create Tests for DateTime Component**: Create a test file for the `DateTime` component. For example, create a file called `DateTime.test.js` in the `src` folder:
+
+`src/DateTime.test.js`:
+```javascript
+import { render, screen } from '@testing-library/react';
+import DateTime from './DateTime';
+
+test('renders DateTime component', () => {
+  render(<DateTime />);
+  const dateElement = screen.getByText(/current date/i);
+  expect(dateElement).toBeInTheDocument();
+  const timeElement = screen.getByText(/current time/i);
+  expect(timeElement).toBeInTheDocument();
+});
+```
+
+In this test, we are checking if the `DateTime` component renders correctly and if it contains the elements for the current date and time.
+
+3. **Run the Tests**: Run the tests using the `npm test` command:
+
+```
+npm test
+```
+
+This command will run all the test files in your project and display the results in the console.
+
+Remember to adapt the tests according to your `DateTime` component implementation. This example assumes that your `DateTime` component displays the current date and time, but your implementation might be different. Adjust the tests accordingly to fit your specific use case.
+
+> Now for FormattedNumbers
+
+To create unit tests for the `FormattedNumbers` component, follow similar steps as before. 
+
+1. **Create Tests for FormattedNumbers Component**: Create a test file for the `FormattedNumbers` component. For example, create a file called `FormattedNumbers.test.js` in the `src` folder:
+
+`src/FormattedNumbers.test.js`:
+```javascript
+import { render, screen } from '@testing-library/react';
+import FormattedNumbers from './FormattedNumbers';
+
+test('renders FormattedNumbers component', () => {
+  render(<FormattedNumbers />);
+  
+  const number1 = screen.getByText(/formatted number 1/i);
+  expect(number1).toBeInTheDocument();
+  
+  const number2 = screen.getByText(/formatted number 2/i);
+  expect(number2).toBeInTheDocument();
+  
+  const number3 = screen.getByText(/formatted number 3/i);
+  expect(number3).toBeInTheDocument();
+  
+  const number4 = screen.getByText(/formatted number 4/i);
+  expect(number4).toBeInTheDocument();
+});
+```
+
+In this test, we are checking if the `FormattedNumbers` component renders correctly and if it contains the elements for the formatted numbers.
+
+2. **Run the Tests**: Run the tests using the `npm test` command:
+
+```
+npm test
+```
+
+Again, this is a basic test and should be adapted according to your `FormattedNumbers` component implementation. This example assumes that your `FormattedNumbers` component displays four formatted numbers, but your implementation might be different. Adjust the tests accordingly to fit your specific use case.
+
+> Now for LanguageSelector
+
+To create unit tests for the `LanguageSelector` component, follow similar steps as before.
+
+1. **Create Tests for LanguageSelector Component**: Create a test file for the `LanguageSelector` component. For example, create a file called `LanguageSelector.test.js` in the `src` folder:
+
+`src/LanguageSelector.test.js`:
+```javascript
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import LanguageSelector from './LanguageSelector';
+
+test('renders LanguageSelector component', () => {
+  render(<LanguageSelector />);
+
+  const englishRadioButton = screen.getByLabelText(/english/i);
+  expect(englishRadioButton).toBeInTheDocument();
+  
+  const frenchRadioButton = screen.getByLabelText(/français/i);
+  expect(frenchRadioButton).toBeInTheDocument();
+  
+  const ukrainianRadioButton = screen.getByLabelText(/українська/i);
+  expect(ukrainianRadioButton).toBeInTheDocument();
+  
+  // check if english is selected by default
+  expect(englishRadioButton).toBeChecked();
+  
+  // check if selecting another language works
+  userEvent.click(frenchRadioButton);
+  expect(frenchRadioButton).toBeChecked();
+  expect(englishRadioButton).not.toBeChecked();
+});
+```
+
+In this test, we are checking if the `LanguageSelector` component renders correctly, if it contains the radio buttons for selecting the languages, and if selecting another language works as expected.
+
+2. **Run the Tests**: Run the tests using the `npm test` command:
+
+```
+npm test
+```
+
+This test assumes that your `LanguageSelector` component contains radio buttons for selecting English, French, and Ukrainian languages, and that English is selected by default. Adjust the tests accordingly to fit your specific use case.
+
+> Now for UnitsOfMeasurement
+
+To create unit tests for the `UnitsOfMeasurement` component, follow similar steps as before.
+
+1. **Create Tests for UnitsOfMeasurement Component**: Create a test file for the `UnitsOfMeasurement` component. For example, create a file called `UnitsOfMeasurement.test.js` in the `src` folder:
+
+`src/UnitsOfMeasurement.test.js`:
+```javascript
+import { render, screen } from '@testing-library/react';
+import UnitsOfMeasurement from './UnitsOfMeasurement';
+
+test('renders UnitsOfMeasurement component', () => {
+  render(<UnitsOfMeasurement />);
+  
+  const inches = screen.getByText(/inches/i);
+  expect(inches).toBeInTheDocument();
+  
+  const centimeters = screen.getByText(/centimeters/i);
+  expect(centimeters).toBeInTheDocument();
+  
+  const pounds = screen.getByText(/pounds/i);
+  expect(pounds).toBeInTheDocument();
+  
+  const kilograms = screen.getByText(/kilograms/i);
+  expect(kilograms).toBeInTheDocument();
+  
+  const liters = screen.getByText(/liters/i);
+  expect(liters).toBeInTheDocument();
+  
+  const ounces = screen.getByText(/ounces/i);
+  expect(ounces).toBeInTheDocument();
+});
+```
+
+In this test, we are checking if the `UnitsOfMeasurement` component renders correctly and if it contains the elements for the different units of measurement.
+
+2. **Run the Tests**: Run the tests using the `npm test` command:
+
+```
+npm test
+```
+
+This test assumes that your `UnitsOfMeasurement` component displays the different units of measurement: inches, centimeters, pounds, kilograms, liters, and ounces. Adjust the tests accordingly to fit your specific use case.
+
+> Now for i18n.js
+
+Testing `i18n.js` is a bit different because it is a configuration file rather than a React component. However, you can still create a test to check if the i18n configuration is working as expected.
+
+1. **Create Tests for i18n.js**: Create a test file for `i18n.js`. For example, create a file called `i18n.test.js` in the `src` folder:
+
+`src/i18n.test.js`:
+```javascript
+import i18n from './i18n';
+
+test('i18n should initialize with default language', () => {
+  expect(i18n.language).toBe('en');
+});
+
+test('i18n should change language', () => {
+  i18n.changeLanguage('fr');
+  expect(i18n.language).toBe('fr');
+  
+  i18n.changeLanguage('ua');
+  expect(i18n.language).toBe('ua');
+});
+```
+
+In this test, we are checking if the i18n configuration initializes with the default language (English), and if it changes the language correctly when the `changeLanguage` function is called.
+
+2. **Run the Tests**: Run the tests using the `npm test` command:
+
+```
+npm test
+```
+
+This test assumes that the default language of your application is English and that you can change the language to French and Ukrainian. Adjust the tests accordingly to fit your specific use case.
+
+> Now for App.js
+
+Testing `App.js` file will involve checking if the entire application, with all its components, renders correctly.
+
+1. **Create Tests for App Component**: Create a test file for the `App` component. For example, create a file called `App.test.js` in the `src` folder:
+
+`src/App.test.js`:
+```javascript
+import { render, screen } from '@testing-library/react';
+import App from './App';
+
+test('renders App component', () => {
+  render(<App />);
+  
+  const welcomeElement = screen.getByText(/welcome/i);
+  expect(welcomeElement).toBeInTheDocument();
+  
+  const messageElement = screen.getByText(/message/i);
+  expect(messageElement).toBeInTheDocument();
+  
+  // Add other assertions for different parts of your application
+});
+```
+
+In this test, we are checking if the `App` component renders correctly and if it contains the elements for the welcome message and other messages.
+
+2. **Run the Tests**: Run the tests using the `npm test` command:
+
+```
+npm test
+```
+
+This is a basic test and should be adapted according to your `App` component implementation. This example assumes that your `App` component displays a welcome message and other messages, but your implementation might be different. Adjust the tests accordingly to fit your specific use case.
+
+> Now for index.js
+
+Testing the `index.js` file can be a bit tricky since it is the entry point of your application and usually contains minimal logic. However, you can still create a basic test to ensure that the application renders without crashing.
+
+1. **Create Tests for index.js**: Create a test file for `index.js`. For example, create a file called `index.test.js` in the `src` folder:
+
+`src/index.test.js`:
+```javascript
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+
+it('renders without crashing', () => {
+  const div = document.createElement('div');
+  ReactDOM.render(<App />, div);
+  ReactDOM.unmountComponentAtNode(div);
+});
+```
+
+In this test, we are checking if the `App` component renders without crashing by mounting it to a `div` and then unmounting it.
+
+2. **Run the Tests**: Run the tests using the `npm test` command:
+
+```
+npm test
+```
+
+This is a basic test to ensure that your application renders without crashing. It does not check for any specific logic or components in your application. Adjust the tests accordingly if you have added any additional logic to your `index.js` file.
+
+> Looks like datetime component test failed 
+      react-i18next:: You will need to pass in an i18next instance by using initReactI18next
+
+It seems that the `react-i18next` library is not initialized properly in your test environment. The `react-i18next` library requires an instance of `i18next` to be initialized with the `initReactI18next` module before your application or tests run.
+
+To fix this, you can create a setup file that initializes `i18next` and then configure Jest to run this setup file before each test.
+
+1. **Create a setup file**: Create a file called `setupTests.js` in your `src` folder:
+
+`src/setupTests.js`:
+```javascript
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+
+i18n.use(initReactI18next).init({
+  resources: {}, // Add your translations here
+  lng: 'en',
+  interpolation: {
+    escapeValue: false,
+  },
+});
+
+global.i18n = i18n;
+```
+
+In this setup file, we are initializing `i18next` with the `initReactI18next` module and an empty `resources` object. You can add your translations to the `resources` object if needed.
+
+2. **Configure Jest to use the setup file**: Open your `package.json` file and add the `setupFilesAfterEnv` configuration to the Jest configuration:
+
+`package.json`:
+```json
+{
+  ...
+  "jest": {
+    "setupFilesAfterEnv": ["<rootDir>/src/setupTests.js"],
+    ...
+  },
+  ...
+}
+```
+
+This configuration tells Jest to run the `setupTests.js` file before each test.
+
+3. **Run the Tests**: Run the tests again using the `npm test` command:
+
+```
+npm test
+```
+
+Your `DateTime` component test should now pass without the `react-i18next:: You will need to pass in an i18next instance by using initReactI18next` error. Adjust the setup file and Jest configuration according to your specific use case and test environment.
+
+
+
+Looks lile now Language selector test is failing in 
+  TestingLibraryElementError: Unable to find a label with the text of: /English/i
+
+    Ignored nodes: comments, script, style
+    <body>
+      <div>
+        <select
+          class="language-selector"
+        >
+          <option
+            selected=""
+            value="en"
+          >
+            English
+          </option>
+          <option
+            value="fr"
+          >
+            French
+          </option>
+          <option
+            value="ua"
+          >
+            Українська
+          </option>
+        </select>
+      </div>
+    </body>
+
+
+The error message indicates that the test is unable to find a label with the text of `/English/i`, but it does find a `select` element with an `option` that contains 'English'. 
+
+It seems that the `LanguageSelector` component uses a `select` element for language selection, but the test is trying to find a `radio` button. You should update your test to reflect the actual implementation of your `LanguageSelector` component.
+
+Here is how you can update your `LanguageSelector.test.js` to test a `select` element:
+
+```javascript
+import { render, screen, fireEvent } from '@testing-library/react';
+import LanguageSelector from './LanguageSelector';
+
+test('renders LanguageSelector component', () => {
+  render(<LanguageSelector />);
+  
+  const selectElement = screen.getByRole('combobox');
+  expect(selectElement).toBeInTheDocument();
+
+  // check if English is selected by default
+  expect(selectElement.value).toBe('en');
+
+  // check if selecting another language works
+  fireEvent.change(selectElement, { target: { value: 'fr' } });
+  expect(selectElement.value).toBe('fr');
+});
+```
+
+In this updated test, we are checking if the `LanguageSelector` component renders correctly, if it contains a `select` element, and if selecting another language works as expected.
+
+Run the tests again using the `npm test` command to see if the updated test passes. Adjust the test accordingly to fit your specific use case.
+
+> In DateTime.test.js
+
+TestingLibraryElementError: Unable to find an element with the text: /current date/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    <body>
+      <div>
+        <div>
+          <p>
+            current_date
+            : 
+            August 28, 2023
+          </p>
+          <p>
+            current_time
+            : 
+            08:53:32 AM
+          </p>
+          <p>
+            current_date_short
+            : 
+            08/28/23
+          </p>
+          <p>
+            current_time_short
+            : 
+            08:53 AM
+          </p>
+        </div>
+      </div>
+    </body>
+
+The error suggests that the test is unable to find an element with the text `/current date/i` because the text is broken up by multiple elements. The test is trying to find a single element with the text 'current date', but the actual output has this text broken up into two different text nodes: 'current_date' and ': August 28, 2023'.
+
+You can adjust your test to search for elements with the text that is actually in the output. For example, if you want to check that the 'current_date' and 'August 28, 2023' are present, you can do the following:
+
+```javascript
+import { render, screen } from '@testing-library/react';
+import DateTime from './DateTime';
+
+test('renders DateTime component', () => {
+  render(<DateTime />);
+  
+  const currentDate = screen.getByText(/current_date/);
+  expect(currentDate).toBeInTheDocument();
+  
+  const currentDateValue = screen.getByText(/August 28, 2023/);
+  expect(currentDateValue).toBeInTheDocument();
+  
+  // Add other assertions for different parts of your DateTime component
+});
+```
+
+In this test, we are checking if the `DateTime` component renders correctly and if it contains the elements for the current date and the current date value.
+
+Run the tests again using the `npm test` command to see if the updated test passes. Adjust the test accordingly to fit your specific use case.
+
+
+> I think that issue with keys it renders as keys and not values
+
+
+The issue seems to be with the translation. The `react-i18next` library is rendering the translation keys (e.g. `current_date`, `current_time`, etc.) instead of the translation values (e.g. 'August 28, 2023', '08:53:32 AM', etc.).
+
+This usually happens when the i18next instance is not initialized properly or when the translations are not loaded correctly.
+
+1. **Initialize i18next Instance**: Make sure that you are initializing the `i18next` instance correctly in your `i18n.js` file:
+
+`src/i18n.js`:
+```javascript
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import translationEN from './locales/en/translation.json';
+import translationUA from './locales/ua/translation.json';
+
+const resources = {
+  en: {
+    translation: translationEN,
+  },
+  ua: {
+    translation: translationUA,
+  },
+};
+
+i18n.use(initReactI18next).init({
+  resources,
+  lng: 'en',
+  keySeparator: false,
+  interpolation: {
+    escapeValue: false,
+  },
+});
+
+export default i18n;
+```
+
+2. **Load Translations**: Make sure that you are loading the translations correctly in your `translation.json` files:
+
+`src/locales/en/translation.json`:
+```json
+{
+  "current_date": "August 28, 2023",
+  "current_time": "08:53:32 AM",
+  "current_date_short": "08/28/23",
+  "current_time_short": "08:53 AM"
+}
+```
+
+`src/locales/ua/translation.json`:
+```json
+{
+  "current_date": "28 серпня 2023",
+  "current_time": "08:53:32",
+  "current_date_short": "28/08/23",
+  "current_time_short": "08:53"
+}
+```
+
+3. **Use Translations**: Make sure that you are using the translations correctly in your `DateTime` component:
+
+`src/DateTime.js`:
+```javascript
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+
+function DateTime() {
+  const { t } = useTranslation();
+  
+  return (
+    <div>
+      <p>{t('current_date')}: August 28, 2023</p>
+      <p>{t('current_time')}: 08:53:32 AM</p>
+      <p>{t('current_date_short')}: 08/28/23</p>
+      <p>{t('current_time_short')}: 08:53 AM</p>
+    </div>
+  );
+}
+
+export default DateTime;
+```
+
+Run your application and check if the `DateTime` component renders the translation values correctly. Adjust your configuration and code according to your specific use case.
+
+
+
+
+
+

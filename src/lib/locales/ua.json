@@ -1,0 +1,21 @@
+{
+  "welcome": "Ласкаво просимо!",
+  "message": "Привіт, світ!",
+  "current_date": "Поточна дата",
+  "current_time": "Поточний час",
+  "current_date_short": "Поточна дата (коротка)",
+  "current_time_short": "Поточний час (короткий)",
+  "formatted_number_1": "Форматоване число 1",
+  "formatted_number_2": "Форматоване число 2 (валюта)",
+  "formatted_number_3": "Форматоване число 3 (мінімум 2 десяткові знаки)",
+  "formatted_number_4": "Форматоване число 4 (без десяткових знаків)",
+  "inches": "Дюйми",
+  "inches_symbol": "in",
+  "centimeters_symbol": "см",
+  "pounds": "Фунти",
+  "pounds_symbol": "lb",
+  "kilograms_symbol": "кг",
+  "liters": "Літри",
+  "liters_symbol": "л",
+  "ounces_symbol": "унції"
+}

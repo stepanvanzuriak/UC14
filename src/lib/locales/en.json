@@ -1,0 +1,21 @@
+{
+  "welcome": "Welcome!",
+  "message": "Hello, World!",
+  "current_date": "Current Date",
+  "current_time": "Current Time",
+  "current_date_short": "Current Date (Short)",
+  "current_time_short": "Current Time (Short)",
+  "formatted_number_1": "Formatted Number 1",
+  "formatted_number_2": "Formatted Number 2 (Currency)",
+  "formatted_number_3": "Formatted Number 3 (Minimum 2 Decimals)",
+  "formatted_number_4": "Formatted Number 4 (No Decimals)",
+  "inches": "Inches",
+  "inches_symbol": "in",
+  "centimeters_symbol": "cm",
+  "pounds": "Pounds",
+  "pounds_symbol": "lb",
+  "kilograms_symbol": "kg",
+  "liters": "Liters",
+  "liters_symbol": "L",
+  "ounces_symbol": "oz"
+}
